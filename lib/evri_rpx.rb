@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 
-# require 'json'
+require 'json'
 require 'net/http'
 require 'net/https'
 

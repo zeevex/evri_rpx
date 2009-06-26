@@ -1,18 +1,22 @@
+require "cgi"
+
 #
 # Temporarily cribbed from rpx_now plugin by rsanders
 #
 module Evri::RPX
   module ViewHelpers
 
-    def embed_code(subdomain,url)
+    def rpx_embed_code(subdomain, url, options = {})
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+
 <<EOF
-<iframe src="https://#{subdomain}.#{Evri::RPX::HOST}/openid/embed?token_url=#{url}"
+<iframe src="https://#{subdomain}.#{Evri::RPX::HOST}/openid/embed?#{optstring}"
   scrolling="no" frameBorder="no" style="width:400px;height:240px;">
 </iframe>
 EOF
     end  
 
-    def popup_code(text, subdomain, url, options = {})
+    def rpx_popup_code(text, subdomain, url, options = {})
       if options[:unobtrusive]
         unobtrusive_popup_code(text, subdomain, url, options)
       else

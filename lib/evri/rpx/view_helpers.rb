@@ -71,7 +71,7 @@ EOF
     end
 
     def extract_version!(options)
-      options.delete(:api_version) || api_version
+      options.delete(:api_version) || Evri::RPX.api_version
     end
 
   end

@@ -42,17 +42,26 @@ EOF
       end
     end
 
+    def rpx_embed_url(subdomain, url, options = {})
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+      "https://#{subdomain}.#{Evri::RPX::HOST}/openid/embed?#{optstring}"
+    end
+
   private
 
     def unobtrusive_popup_code(text, subdomain, url, options={})
       version = extract_version! options
-      "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Evri::RPX::HOST}/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+
+      "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Evri::RPX::HOST}/openid/v#{version}/signin?#{optstring}\">#{text}</a>"
     end
 
     def obtrusive_popup_code(text, subdomain, url, options = {})
       version = extract_version! options
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+
       <<EOF
-<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{HOST}/openid/v#{version}/signin?token_url=#{url}">
+<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{HOST}/openid/v#{version}/signin?#{optstring}">
   #{text}
 </a>
 <script src="https://#{Evri::RPX::HOST}/openid/v#{version}/widget" type="text/javascript"></script>

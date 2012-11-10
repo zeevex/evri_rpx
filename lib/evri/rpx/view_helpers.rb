@@ -7,25 +7,27 @@ module Evri::RPX
   module ViewHelpers
 
     def rpx_embed_code(subdomain, url, options = {})
+      namespace = options.delete(:namespace)
+      namespace += "_" if namespace.present? && namespace[-1,1] != "_"
       optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
 
 <<EOF
 <script type="text/javascript">
 function rpx_dismiss_progress(id) {
-   jQuery('#rpx_spinner').hide();
+   jQuery('#' + id).hide();
 }
 </script>
 
-<div id="rpx_embed_container" style="width:400px;height:240px; position:relative;">
-  <div id="rpx_spinner" style="position:absolute; left: 150px; top: 100px; display: none;">
+<div id="#{namespace}rpx_embed_container" style="width:400px;height:240px; position:relative;">
+  <div id="#{namespace}rpx_spinner" style="position:absolute; left: 150px; top: 100px; display: none;">
     <img src="/images/spinner.gif" height="16" width="16"> Loading...
   </div>
 
 <script type="text/javascript">
-jQuery('#rpx_spinner').show();
+jQuery('#{namespace}rpx_spinner').show();
 </script>
 
-<iframe id="rpx_embed" src="https://#{subdomain}.#{Evri::RPX::HOST}/openid/embed?#{optstring}" onload="rpx_dismiss_progress('rpx_spinner')"
+<iframe id="#{namespace}rpx_embed" src="https://#{subdomain}.#{Evri::RPX::HOST}/openid/embed?#{optstring}" onload="rpx_dismiss_progress('#{namespace}rpx_spinner')"
   scrolling="no" frameBorder="no" style="width:400px;height:240px;">
 </iframe>
 

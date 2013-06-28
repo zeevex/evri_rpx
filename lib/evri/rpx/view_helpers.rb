@@ -11,7 +11,7 @@ module Evri::RPX
       namespace += "_" if namespace.present? && namespace[-1,1] != "_"
       optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
 
-<<EOF
+      res = <<-EOF
 <script type="text/javascript">
 function rpx_dismiss_progress(id) {
    jQuery('#' + id).hide();
@@ -33,7 +33,8 @@ jQuery('#{namespace}rpx_spinner').show();
 
 
 </div>
-EOF
+      EOF
+      res.html_safe
     end  
 
     def rpx_popup_code(text, subdomain, url, options = {})
@@ -41,7 +42,7 @@ EOF
         unobtrusive_popup_code(text, subdomain, url, options)
       else
         obtrusive_popup_code(text, subdomain, url, options)
-      end
+      end.html_safe
     end
 
     def rpx_embed_url(subdomain, url, options = {})
@@ -55,14 +56,14 @@ EOF
       version = extract_version! options
       optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
 
-      "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Evri::RPX::HOST}/openid/v#{version}/signin?#{optstring}\">#{text}</a>"
+      "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Evri::RPX::HOST}/openid/v#{version}/signin?#{optstring}\">#{text}</a>".html_safe
     end
 
     def obtrusive_popup_code(text, subdomain, url, options = {})
       version = extract_version! options
       optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
 
-      <<EOF
+      res = <<-EOF
 <a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{HOST}/openid/v#{version}/signin?#{optstring}">
   #{text}
 </a>
@@ -76,7 +77,8 @@ EOF
   RPXNOW.language_preference = '#{options[:language]||'en'}';
   //]]>
 </script>
-EOF
+      EOF
+      res.html_safe
     end
 
     def extract_key_version_and_options!(args)

@@ -9,7 +9,7 @@ module Evri::RPX
     def rpx_embed_code(subdomain, url, options = {})
       namespace = options.delete(:namespace)
       namespace += "_" if namespace.present? && namespace[-1,1] != "_"
-      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&amp;")
 
       res = <<-EOF
 <script type="text/javascript">
@@ -54,14 +54,14 @@ jQuery('#{namespace}rpx_spinner').show();
 
     def unobtrusive_popup_code(text, subdomain, url, options={})
       version = extract_version! options
-      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&amp;")
 
       "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Evri::RPX::HOST}/openid/v#{version}/signin?#{optstring}\">#{text}</a>".html_safe
     end
 
     def obtrusive_popup_code(text, subdomain, url, options = {})
       version = extract_version! options
-      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&")
+      optstring = options.merge({:token_url => url}).map {|k,v| CGI.escape(k.to_s) + "=" + CGI.escape(v.to_s) }.join("&amp;")
 
       res = <<-EOF
 <a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{HOST}/openid/v#{version}/signin?#{optstring}">
